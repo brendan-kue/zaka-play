@@ -14,7 +14,7 @@ class AppConfig {
   /// Leave empty for demo mode (everything stored on the phone).
   static const String apiBase = '';
 
-  static const String supportEmail = 'support@zakaplay.co.za';
+  static const String supportEmail = 'rangariraimutasa@gmail.com';
   static const String termsUrl = 'https://zakaplay.co.za/terms';
   static const String privacyUrl = 'https://zakaplay.co.za/privacy';
 
