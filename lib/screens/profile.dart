@@ -100,8 +100,32 @@ class ProfileScreen extends StatelessWidget {
         _row(context, Icons.description_rounded, 'Terms', () => launchUrl(Uri.parse(AppConfig.termsUrl))),
         _row(context, Icons.privacy_tip_rounded, 'Privacy Policy', () => launchUrl(Uri.parse(AppConfig.privacyUrl))),
         _row(context, Icons.logout_rounded, 'Log out', () => context.read<AppState>().logOut()),
+        _row(context, Icons.delete_forever_rounded, 'Delete account', () => _confirmDelete(context)),
       ]),
     );
+  }
+
+  Future<void> _confirmDelete(BuildContext context) async {
+    final s = context.read<AppState>();
+    final yes = await showDialog<bool>(
+      context: context,
+      builder: (c) => AlertDialog(
+        title: const Text('Delete your account?'),
+        content: const Text(
+            'Your coins and history will be removed. Any coins you have not cashed out will be lost. This cannot be undone.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('Cancel')),
+          TextButton(
+              onPressed: () => Navigator.pop(c, true),
+              child: const Text('Delete', style: TextStyle(color: Colors.red, fontWeight: FontWeight.w800))),
+        ],
+      ),
+    );
+    if (yes != true) return;
+    final body = Uri.encodeComponent('Please delete my Zaka Play account.\nUser ID: ${s.uid}\nPhone: ${s.phone}');
+    await launchUrl(Uri.parse(
+        'mailto:${AppConfig.supportEmail}?subject=${Uri.encodeComponent('Delete my Zaka Play account')}&body=$body'));
+    await s.logOut();
   }
 
   Widget _row(BuildContext context, IconData icon, String label, VoidCallback onTap) => Padding(
